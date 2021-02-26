@@ -6,3 +6,5 @@ Everything is new to me, so I explore not only Git and GitHub, but also connecti
 Also, the emoticons feature is fantastic :tea: :coffee: :tea:
 
 This line is modified on my local repository and pushed to the GitHub repository.
+
+This line is pushed trough a new branch to trigger a pull request.
