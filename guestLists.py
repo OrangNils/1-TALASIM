@@ -9,58 +9,41 @@ import pandas as pd
 import numpy as np
 import datetime
 
-def datePrefixISO(date):
-    # Return the datePrefix in the format 2021133, i.e. YYYY CW WD
-    full = date
-    YYYY = str(full.isocalendar()[0])
-    CW = full.isocalendar()[1]
-    if CW < 10:
-        CW = "0" + str(CW)
-    else:
-        CW = str(CW)
-    WD = str(full.isocalendar()[2])    
-    datePrefix = YYYY + CW + WD
-    return datePrefix
+from tools import datePrefixISO
+from tools import nextguestListID
+from tools import idComposer
+from tools import idDecomposer
 
-def nextguestListID(inputID, proposedPrefix, proposedSuffix):
-    # Compares inputID with propsedID.
-    # Returns the one that is correct.
-    
-    inputIDPrefix = inputID[0:7]
-    inputIDSuffix = inputID[7::]
-    
-    # Increase the suffic by 1, if the prefix is the same.
-    if inputIDPrefix == proposedPrefix:
-        correctPrefix = proposedPrefix
-        correctSuffix = np.int(inputIDSuffix) + 1
-        if (correctSuffix < 10):
-            correctSuffix = "00" + str(correctSuffix)
-        elif (correctSuffix >= 10) and (correctSuffix < 100):
-            correctSuffix = "0" + str(correctSuffix)
-        elif (correctSuffix >= 100):
-            correctSuffix = str(correctSuffix)
 
-        correctID = correctPrefix + correctSuffix
-    
-    # Start a new count for today, i.e. proposedPrefix + proposedSuffix
-    else:
-        correctID = proposedPrefix + proposedSuffix
-    
-    return correctID
-
-def guestListID(path_guestListID):
-    # Check if register of guestListIDs exists. If not, create a new one.
+def guestListID(path_guestListID, default=None):
+    # Purpose: Check if register of guestListIDs exists. If not, create a new one.
+    #          Keeps track of the generated guestListIDs.
     # 1. Define file path and file name.
     # 2. Check if register file exists.
     # 3. If exists: open register file and retrieve the latest guestListID
     # 4. If not: create a new register file "register.xlsx" and add new guestListID
     # 5. Save and close.
-    # 6. Done    
+    # 6. Done  
+
+    # Arguments: 
+    #   path_guestListID - a relative file path to the guestListID register
+    #   default - a switch to debug/develop the function, string value     
+    # Variables:
+    #   ... - ....
+    # Output: the guestListID (string object) that is used for the next guestList    
     
+    # 
+    if default != None:
+        return default                                  # A return statement ends the execution of the function call.
+    else:
+        pass
+        
     path = path_guestListID
     file = "guestListID_register.xlsx"
+    indicator = "G"
     datePrefix = datePrefixISO(date=datetime.date.today())
     dateSuffix = "001"
+    proposedID = idComposer(indicator=indicator, prefix=datePrefix, suffix=dateSuffix)
     
     try:
         with open(path + file) as f:
@@ -70,7 +53,7 @@ def guestListID(path_guestListID):
         # tmp_sr_length = len(tmp_sr.index.values)
         lastGuestListID = str(tmp_sr.iloc[-1])           # "[0]" would also select the value
         print(lastGuestListID)
-        tmp_nextID = nextguestListID(inputID=lastGuestListID, proposedPrefix=datePrefix, proposedSuffix=dateSuffix)
+        tmp_nextID = nextguestListID(inputID=lastGuestListID, proposedID=proposedID)
         print(tmp_nextID)
         tmp = pd.Series(data=[tmp_nextID], dtype=str, name="guestListID_register")
         print(tmp_sr)
@@ -79,12 +62,16 @@ def guestListID(path_guestListID):
         print(tmp_sr)
         tmp_sr.to_excel(excel_writer=path + file, sheet_name="test")
         
+        return tmp_nextID
+        
     except IOError:
         print("No file found.")
         guestListID = datePrefix + dateSuffix
         tmp_df = pd.Series(data=[guestListID], dtype=str, name="guestListID_register")
         tmp_df.to_excel(excel_writer=path + file, sheet_name="test")
-    pass
+        
+        return guestListID
+
 
 ### ---
 # Not needed at the moment: makes the code more complicated than it needs to be 
@@ -136,9 +123,12 @@ class guestList:
     #     return self.tmp
     
     def addProfile(self, profileID):
-        # use something like:
-        # input_dataframe = Profile(input_dataframe, profileID)
-        # return input_dataframe
+        # Purpose: Create data frame for financial statements.
+        # Arguments: 
+        #   profileID - integer, determines which guest profile to choose from        
+        # Variables:
+        #   self.tmp - an instance of the class, a pd data frame that grows every time that "addProfile()" is called
+        # Output: the guest list "self.tmp" as pandas data frame which has the profile attached to the data frame
         print("Now online: addProfile method.")
         
         # Leave as archive for "class guestAttributes"
@@ -160,7 +150,7 @@ class guestList:
             self.nRows = len(self.tmp.index)
            
             # specify the attributes
-            self.guestID = self.nRows+10
+            self.guestID = self.nRows+1
             self.nights = 2
             self.breakfast = "basic"
             self.lunch = 1
@@ -198,7 +188,7 @@ class guestList:
             self.nRows = len(self.tmp.index)
             
             # specify the attributes
-            self.guestID = self.nRows+10
+            self.guestID = self.nRows+1
             self.nights = 2
             self.breakfast = "extra"
             self.lunch = 0

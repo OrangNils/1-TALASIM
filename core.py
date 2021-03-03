@@ -15,27 +15,36 @@ import pandas as pd
 import numpy as np
 
 def main():
-    
+    # Purpose: Create data frame for financial statements.
+    #
     # 1. Define file paths.
-    # 2. Choose guestList.
+    # 2. Choose and load guestList.
     # 3. Create empty financialStatement with attributes in header.
     # 4. Add financial statements by looping through guestList and simulating interactions.
     # 5. Save the financialStatements sheet to excel-file.
     # 6. Done.
+
+    # Arguments: 
+    #   profileID - integer, determines which guest profile to choose from        
+    # Variables:
+    #   self.tmp - an instance of the class, a pd data frame that grows every time that "addProfile()" is called
+    # Output: the guest list "self.tmp" as pandas data frame which has the profile attached to the data frame
+ 
+    
+
     
     # 1. Define file paths.
     path_finStat = ".\\financialStatements\\"
     path_guestList = ".\\guestLists\\"
     
-    # 2. Choose guestList.
-    guestListID = "100"
+    # 2. Choose and load guestList.
+    guestListID = "2"
     tmp_guestList = pd.read_excel(path_guestList + guestListID + ".xlsx", index_col=0, header=0)
-    
     #print(list(tmp_guestList.columns.values))                  # "tmp_guestList.columns.values" return an nd.ndarray 
+       
+    # 3. Create empty financialStatement with attributes in header 
     header = guestAttributes.attributes                         # "header" is a list object
 
-    
-    # 3. Create empty financialStatement with attributes in header 
     newFinStat = finStat(ID=3)
     newFinStat_df = newFinStat.create(header=header)            # creates an empty DataFrame with named header
 

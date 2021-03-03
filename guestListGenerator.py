@@ -24,25 +24,25 @@ def main():
     path_guestList = ".\\guestLists\\"
  
     # 2. Define guestListID
-    tmp_guestListID = guestListID(path_guestListID=path_guestList)
-    print(tmp_guestListID)
+    tmp_guestListID = guestListID(path_guestListID=path_guestList, default="2")
+    print("This is the guestListID that is returned by the function guestListID(): " + str(tmp_guestListID))
     
     # 3. Create empty guestList with attributes in header.
-    # Create new guestList sheet - option 2 all-in-one
-    new = guestList(10)
-    new.tmp.to_excel(path_guestList + str(guestList(1).ID) + ".xlsx", sheet_name="test")
+    new = guestList(tmp_guestListID)                     # attributes are automaticall taken from the class "guestAttributes"
+    # new = guestList(1)                                   # if                 
+    # new.tmp.to_excel(path_guestList + str(new.ID) + ".xlsx", sheet_name="test")
     
     # 4. Loop through combination of profiles.
     # test
-    new2 = guestList(100)
+    # new2 = guestList(100)
     
     for i in range(10):
         
-        guestListDummy = new2.addProfile(1)
-        guestListDummy = new2.addProfile(2)
+        guestListDummy = new.addProfile(1)              # The method "addProfile()" returns the modified guest list. The guest list is an instance variable of the class, i.e. the guest list is contained in the class instance and is directly accessible for future modifications.
+        guestListDummy = new.addProfile(2)
     
     # 5. Save guestList to excel-file.
-    guestListDummy.to_excel(path_guestList + str(guestList(100).ID) + ".xlsx", sheet_name="test")
+    guestListDummy.to_excel(path_guestList + str(new.ID) + ".xlsx", sheet_name="test")
     
     # 6. Done.
      
