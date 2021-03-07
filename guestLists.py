@@ -189,7 +189,7 @@ class guestList:
             
             # specify the attributes
             self.guestID = self.nRows+1
-            self.nights = 2
+            self.nights = 4
             self.breakfast = "extra"
             self.lunch = 0
             self.dinner = 2

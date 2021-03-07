@@ -35,6 +35,16 @@ class finStat:
         self.tmp = pd.DataFrame(data=None, columns=header)
         return self.tmp
     
+
+class finStatTemplate:
+    
+    def __init__(self, columns):
+        self.columns = columns
+
+    def create(self):
+        df = pd.DataFrame(data=None, columns=self.columns)
+        return df
+    
 def nextFinStatID(path_finStatID, guestListID, talaID="1", default=None):
     # Purpose: Check if register of finStatIDs exists. If not, create a new one.
     #          Keeps track of the generated finStatListIDs and associate them with the talaID.
